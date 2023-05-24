@@ -8,4 +8,6 @@ const PGUSER = process.env.PGUSER;
 const PGPASSWORD = process.env.PGPASSWORD;
 const PGDATABASE = process.env.PGDATABASE;
 
-module.exports = { PORT, PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE };
+const ML_ENDPOINT = process.env.ML_ENDPOINT;
+
+module.exports = { PORT, PGHOST, PGPORT, PGUSER, PGPASSWORD, PGDATABASE,ML_ENDPOINT };

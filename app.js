@@ -8,6 +8,16 @@ const { Song } = require("./models/index");
 const { ML_ENDPOINT } = require("./utilities/config");
 const logger = require("./utilities/logger");
 
+const label = [
+  "angry",
+  "disgust",
+  "fear",
+  "happy",
+  "neutral",
+  "sad",
+  "surprise",
+];
+
 app.use(cors());
 app.use(express.json());
 
@@ -25,12 +35,10 @@ app.post("/predict", async (request, response) => {
   };
   try {
     model_response = await axios(options);
-    console.log(model_response.data);
+    response.json({output: label[model_response.data.prediction]})
   } catch (error) {
     logger.error(error);
   }
-
-  response.json(output);
 });
 
 app.use(express.json());

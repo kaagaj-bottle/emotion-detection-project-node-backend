@@ -58,7 +58,10 @@ app.post("/predict", async (request, response) => {
         emotion: model_response.data.prediction,
       },
     });
-    response.json({songs_recommendation,mood:model_response.data.prediction});
+    response.json({
+      songs_recommendation,
+      mood: label[model_response.data.prediction],
+    });
   } catch (error) {
     logger.error(error);
   }

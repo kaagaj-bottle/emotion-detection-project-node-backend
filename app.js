@@ -21,13 +21,31 @@ const label = [
 app.use(cors());
 app.use(express.json());
 
-app.post("/", async (request, response) => {
+app.get("/", async (request, response) => {
   response.send("<h1>Welcome</h1>");
+});
+
+app.get("/:emotion", async (request, response) => {
+  const song = await Song.findAll({
+    where: {
+      emotion: request.params.emotion,
+    },
+  });
+  response.json(song);
+});
+
+app.post("/", async (request, response) => {
+  const song = request.body;
+  try {
+    const savedSong = await Song.create(song);
+    response.json(savedSong);
+  } catch (error) {
+    logger.error(error);
+  }
 });
 
 app.post("/predict", async (request, response) => {
   const base64Image = request.body.image;
-  let output = "hello";
   const options = {
     method: "post",
     url: ML_ENDPOINT,
@@ -35,7 +53,12 @@ app.post("/predict", async (request, response) => {
   };
   try {
     model_response = await axios(options);
-    response.json({output: label[model_response.data.prediction]})
+    const songs_recommendation = await Song.findAll({
+      where: {
+        emotion: model_response.data.prediction,
+      },
+    });
+    response.json({songs_recommendation,mood:model_response.data.prediction});
   } catch (error) {
     logger.error(error);
   }
